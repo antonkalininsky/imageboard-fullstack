@@ -1,15 +1,19 @@
 
-const http = require('http')
-
 const PORT = process.env.PORT || 5000
+const Application = require('./framework/application')
+const postRouter = require('./src/post-router')
+const parseUrl = require('./framework/middlewares/parseUrl')
+const parseJson = require('./framework/middlewares/parseJson')
 
-const server = http.createServer((req, res) => {
-    // заголовок респонса, код, контент и кодировка
-    res.writeHead(200, {
-        'Content-type': 'text/html; charset=utf-8'
-    })
-    // возвращаемое юзеру сообщение
-    res.end('server is working')
-})
+const app = new Application()
 
-server.listen(PORT, () => console.log(`server started on PORT ${PORT}`))
+app.use(parseJson)
+app.use(parseUrl('http://localhost:5000'))
+
+app.addRouter(postRouter)
+
+try {
+    app.listen(PORT, () => console.log(`server started on PORT ${PORT}`))
+} catch(error) {
+    console.log(error)
+}
