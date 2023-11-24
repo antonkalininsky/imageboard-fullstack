@@ -1,28 +1,46 @@
 const fs = require('fs')
-const filePath = 'data/posts.json'
+const postsFilePath = 'data/posts.json'
+const threadsFilePath = 'data/threads.json'
 
 const getPosts = (req, res) => {
-    const jsonData = fs.readFileSync(filePath, 'utf-8')
+    const jsonData = fs.readFileSync(postsFilePath, 'utf-8')
+    const postsData = JSON.parse(jsonData)
     if (req.params.id) {
-        const postsData = JSON.parse(jsonData)
         const searchedPost = postsData.find((post) => post.id == req.params.id)
         if (searchedPost) {
             res.send(searchedPost)
         } else {
             res.send('post not found!')
         }
+    } else if (req.params.threadId) {
+        const postsFromThread = postsData.filter(post => post.threadId == req.params.threadId)
+        res.send(postsFromThread)
     } else {
-        res.send(JSON.parse(jsonData))
+        res.send(postsData)
     }
 }
 
 const addPost = (req, res) => {
-    const jsonData = fs.readFileSync(filePath, 'utf-8')
+    const jsonData = fs.readFileSync(postsFilePath, 'utf-8')
     const postsData = JSON.parse(jsonData)
     const newPost = req.body
+    // required field
+    if (!newPost.threadId) {
+        res.send('error! threadId is required!')
+        return    
+    }
+    // check for existing thread
+    const threadsJsonData = fs.readFileSync(threadsFilePath, 'utf-8')
+    const threadsData = JSON.parse(threadsJsonData)
+    const targetThread = threadsData.find(thread => thread.id == newPost.threadId)
+    if (!targetThread) {
+        res.send('error! thread with send id does not exist')
+        return    
+    }
+    // adding post
     newPost.id = postsData.length + 1
     postsData.push(newPost)
-    fs.writeFileSync(filePath, JSON.stringify(postsData))
+    fs.writeFileSync(postsFilePath, JSON.stringify(postsData))
     res.send('post successfully added')
 }
 
