@@ -1,29 +1,37 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Post from './components/Post'
+import PostForm from './components/PostForm'
 
 function App() {
 
   const [posts, setPosts] = useState([])
   const [postList, setPostList] = useState([])
 
+  const fetchData = async () => {
+    const res = await axios.get('/posts')
+    setPosts(res.data)
+  }
+
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await axios.get('/posts')
-      setPosts(res.data)
-    }
     fetchData()
   }, [])
 
   useEffect(() => {
-    posts.forEach(post => {
-      setPostList(posts.map(post => <Post text={post.text} key={post.id} />))
-    })
+    setPostList(posts.map(post => <Post text={post.text} key={post.id} />))
   }, [JSON.stringify(posts)])
+
+  const submitPost = async (value) => {
+    await axios.post('/posts', {
+      text: value
+    })
+    await fetchData()
+  }
 
   return (
     <div>
       {postList}
+      <PostForm submit={submitPost} />
     </div>
   );
 }
