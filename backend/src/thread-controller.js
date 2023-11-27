@@ -1,8 +1,9 @@
 const fs = require('fs')
-const filePath = 'data/threads.json'
+const threadsFilePath = 'data/threads.json'
+const postsFilePath = 'data/posts.json'
 
 const getThreads = (req, res) => {
-    const jsonData = fs.readFileSync(filePath, 'utf-8')
+    const jsonData = fs.readFileSync(threadsFilePath, 'utf-8')
     const threadsData = JSON.parse(jsonData)
     if (req.params.id) {
         const searchedThread = threadsData.find((thread) => thread.id == req.params.id)
@@ -17,18 +18,25 @@ const getThreads = (req, res) => {
 }
 
 const addThread = (req, res) => {
-    const jsonData = fs.readFileSync(filePath, 'utf-8')
+    const jsonData = fs.readFileSync(threadsFilePath, 'utf-8')
     const threadsData = JSON.parse(jsonData)
     const newThread = req.body
     newThread.id = threadsData.length + 1
     newThread.timeValue = Date.now()
     newThread.postCount = 0
     threadsData.push(newThread)
-    fs.writeFileSync(filePath, JSON.stringify(threadsData))
+    fs.writeFileSync(threadsFilePath, JSON.stringify(threadsData))
     res.send('thread successfully created')
+}
+
+const deleteThreads = (req, res) => {
+    fs.writeFileSync(threadsFilePath, JSON.stringify([]))
+    fs.writeFileSync(postsFilePath, JSON.stringify([]))
+    res.send('thread data successfully deleted')
 }
 
 module.exports = {
     getThreads,
-    addThread
+    addThread,
+    deleteThreads
 }
