@@ -1,3 +1,5 @@
+const BUMP_LIMIT = 100
+
 const fs = require('fs')
 const postsFilePath = 'data/posts.json'
 const threadsFilePath = 'data/threads.json'
@@ -41,6 +43,12 @@ const addPost = (req, res) => {
     newPost.id = postsData.length + 1
     postsData.push(newPost)
     fs.writeFileSync(postsFilePath, JSON.stringify(postsData))
+    // updating target thread
+    targetThread.postCount += 1
+    if (targetThread.postCount <= BUMP_LIMIT && !Boolean(newPost.isSage)) {
+        targetThread.timeValue = Date.now()
+    }
+    fs.writeFileSync(threadsFilePath, JSON.stringify(threadsData))
     res.send('post successfully added')
 }
 

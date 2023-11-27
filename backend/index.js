@@ -1,5 +1,5 @@
-
 const PORT = process.env.PORT || 5000
+
 const Application = require('./framework/application')
 const postRouter = require('./src/post-router')
 const threadRouter = require('./src/thread-router')
