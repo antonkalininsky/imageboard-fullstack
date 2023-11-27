@@ -18,7 +18,7 @@ export default function Threads() {
   }, [])
 
   useEffect(() => {
-    setPostList(posts.map(post => <ThreadBlock text={post.text} key={post.id} />))
+    setPostList(posts.map(post => <ThreadBlock {...post} key={post.id} />))
   }, [JSON.stringify(posts)])
 
   // const submitPost = async (value) => {

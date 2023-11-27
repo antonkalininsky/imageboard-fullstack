@@ -4,8 +4,8 @@ import {
   createBrowserRouter,
   RouterProvider
 } from 'react-router-dom'
-import Thread from './views/thread';
-import Threads from './views/threads';
+import Thread from './views/Thread';
+import Threads from './views/Threads';
 
 const router = createBrowserRouter([
   {
@@ -13,7 +13,7 @@ const router = createBrowserRouter([
     element: <Threads />
   },
   {
-    path: '/thread',
+    path: '/thread/:id',
     element: <Thread />
   },
 ])
