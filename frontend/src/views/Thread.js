@@ -5,8 +5,6 @@ import Post from '../components/Post'
 import PostForm from '../components/PostForm'
 import { useLocation, Link } from 'react-router-dom'
 
-
-
 export default function Thread() {
 
     const [posts, setPosts] = useState([])

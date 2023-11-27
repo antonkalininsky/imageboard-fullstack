@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import ThreadBlock from '../components/ThreadBlock'
-// import PostForm from '../components/PostForm'
+import ThreadForm from '../components/ThreadForm'
 
 export default function Threads() {
 
@@ -21,17 +21,17 @@ export default function Threads() {
     setPostList(posts.map(post => <ThreadBlock {...post} key={post.id} />))
   }, [JSON.stringify(posts)])
 
-  // const submitPost = async (value) => {
-  //   await axios.post('/posts', {
-  //     text: value
-  //   })
-  //   await fetchData()
-  // }
+  const submitPost = async (value) => {
+    await axios.post('/threads', {
+      text: value
+    })
+    await fetchData()
+  }
 
   return (
     <div>
       {postList}
-      {/* <PostForm submit={submitPost} /> */}
+      <ThreadForm submit={submitPost} />
     </div>
   );
 }
