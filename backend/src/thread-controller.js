@@ -23,6 +23,7 @@ const addThread = (req, res) => {
     const newThread = req.body
     newThread.id = threadsData.length + 1
     newThread.timeValue = Date.now()
+    newThread.timeCreation = Date.now()
     newThread.postCount = 0
     threadsData.push(newThread)
     fs.writeFileSync(threadsFilePath, JSON.stringify(threadsData))
