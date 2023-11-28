@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import ThreadBlock from '../components/ThreadBlock'
 import ThreadForm from '../components/ThreadForm'
+import ThreadContainer from '../components/UI/ThreadContainer'
 
 export default function Threads() {
 
@@ -14,7 +15,7 @@ export default function Threads() {
   }
 
   useEffect(() => {
-    fetchData()
+    // fetchData()
   }, [])
 
   useEffect(() => {
@@ -29,9 +30,12 @@ export default function Threads() {
   }
 
   return (
-    <div>
-      {postList}
-      <ThreadForm submit={submitPost} />
+    <div className='bg-gray-dark flex flex-col justify-start items-center pt-10'>
+      {/* {postList}
+      <ThreadForm submit={submitPost} /> */}
+      <ThreadContainer />
+      <ThreadContainer />
+      <ThreadContainer />
     </div>
   );
 }

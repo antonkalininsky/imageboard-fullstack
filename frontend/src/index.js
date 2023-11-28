@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom'
 import Thread from './views/Thread';
 import Threads from './views/Threads';
+import './index.css'
 
 const router = createBrowserRouter([
   {
