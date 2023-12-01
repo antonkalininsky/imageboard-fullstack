@@ -3,7 +3,7 @@ const threadsFilePath = 'data/threads.json'
 
 module.exports = class ThreadService {
     constructor() {
-        this.timeLimit = 60000
+        this.timeLimit = 24*60*60*1000
     }
 
     checkThreads() {

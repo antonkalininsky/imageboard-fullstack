@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import ThreadBlock from '../components/ThreadBlock'
 import ThreadForm from '../components/ThreadForm'
 import ThreadContainer from '../components/UI/ThreadContainer'
 

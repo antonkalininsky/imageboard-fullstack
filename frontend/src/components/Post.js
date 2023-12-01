@@ -1,8 +1,10 @@
 import React from 'react'
-import classes from './post.module.css'
 
 export default function Post(props) {
   return (
-    <div className={classes.post}>{props.text}</div>
+    <>
+      <div className='text-white w-full mb-5 break-words'>{props.text}</div>
+      <div className='w-full h-1 bg-gray-darker mb-5'></div>
+    </>
   )
 }

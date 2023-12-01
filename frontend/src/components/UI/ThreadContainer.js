@@ -1,8 +1,19 @@
 import React from 'react'
 import MyButton from './MyButton'
 import { mdiChat, mdiBookmark } from '@mdi/js';
+import { useNavigate } from 'react-router-dom'
 
 export default function ThreadContainer(props) {
+
+  const navigate = useNavigate()
+
+  const handleEnterThread = () => {
+    navigate(`/thread/${props.id}`)
+  }
+
+  const handleAddFavourite = () => {
+    // todo
+  }
 
   return (
     <div className='container text-white bg-gray p-8 max-w-xl mb-6 rounded-xl shadow-main'>
@@ -14,8 +25,8 @@ export default function ThreadContainer(props) {
         {props.text}
       </div>
       <div className='flex space-x-2'>
-        <MyButton icon={mdiBookmark} counter={false} onClick={props.onEnter} />
-        <MyButton text={'Ответить'} icon={mdiChat} counter={props.counter} onClick={props.addFavourite} />
+        {/* <MyButton icon={mdiBookmark} counter={false} onClick={handleAddFavourite} /> */}
+        <MyButton text={'Answer'} icon={mdiChat} counter={props.postCount} onClick={handleEnterThread} />
       </div>
     </div>
   )
