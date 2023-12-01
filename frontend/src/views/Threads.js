@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import ThreadBlock from '../components/ThreadBlock'
 import ThreadForm from '../components/ThreadForm'
+import ThreadContainer from '../components/UI/ThreadContainer'
 
 export default function Threads() {
 
@@ -18,20 +18,13 @@ export default function Threads() {
   }, [])
 
   useEffect(() => {
-    setPostList(posts.map(post => <ThreadBlock {...post} key={post.id} />))
+    setPostList(posts.map(post => <ThreadContainer {...post} key={post.id} />))
   }, [JSON.stringify(posts)])
 
-  const submitPost = async (value) => {
-    await axios.post('/threads', {
-      text: value
-    })
-    await fetchData()
-  }
-
   return (
-    <div>
+    <div className='flex flex-col justify-start items-center pt-10'>
+      <ThreadForm triggerUpdate={fetchData} />
       {postList}
-      <ThreadForm submit={submitPost} />
     </div>
   );
 }
