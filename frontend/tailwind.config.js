@@ -11,7 +11,9 @@ module.exports = {
       'gray-darker': '#33394f',
       'blackish': '#12151d',
       'primary': '#d1caff',
-      'pink': '#fc728b'
+      'pink': '#fc728b',
+      'light': '#d1caff',
+      'light-darker': '#a7a1cc'
     },
     extend: {
       boxShadow: {
