@@ -4,6 +4,8 @@ const moment = require('moment')
 class PostController {
     async createPost(req, res) {
         // todo - update thread
+        // todo - thread_id validation
+        // todo - placeholder for empty title
         const { title, content, sage, threadId } = req.body
         const sageCheck = sage ? true : false
         const createdAt = moment().format('YYYY-MM-DD hh:mm:ss')
@@ -14,7 +16,7 @@ class PostController {
             )
         res.json(newPost.rows[0])
     }
-    
+
     async updatePost(req, res) {
         const updatableFields = ['title', 'content']
         const id = req.params.id
