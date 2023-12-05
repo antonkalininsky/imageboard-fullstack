@@ -4,15 +4,15 @@ const moment = require('moment')
 class PostController {
     async createPost(req, res) {
         // todo - update thread
-        // todo - thread_id validation
-        // todo - placeholder for empty title
         const { title, content, sage, threadId } = req.body
+        // sending
+        const titleCheck = title ? title : content.slice(0, 50)
         const sageCheck = sage ? true : false
         const createdAt = moment().format('YYYY-MM-DD hh:mm:ss')
         const newPost =
             await db.query(
                 'INSERT INTO post (title, content, sage, thread_id, created_at) values ($1, $2, $3, $4, $5) RETURNING *',
-                [title, content, sageCheck, threadId, createdAt]
+                [titleCheck, content, sageCheck, threadId, createdAt]
             )
         res.json(newPost.rows[0])
     }
@@ -32,49 +32,30 @@ class PostController {
                 counter++
             }
         })
-        const result = await db.query(`UPDATE post SET ${RequestSQL} WHERE id = ($${counter})`, [...MapperSQL, id])
-        if (result.rowCount == 0) {
-            res.status(500).json({
-                error: {
-                    message: 'Error! Post with this ID does not exist!'
-                }
-            })
-        } else {
-            res.json('Post successfully updated!')
-        }
+        await db.query(`UPDATE post SET ${RequestSQL} WHERE id = ($${counter})`, [...MapperSQL, id])
+        res.json('post successfully updated')
     }
 
     async deletePost(req, res) {
         // todo - update thread
         const id = req.params.id
-        const result = await db.query('DELETE FROM post WHERE id = ($1)', [id])
-        if (result.rowCount == 0) {
-            res.status(500).json({
-                error: {
-                    message: 'Error! Post with this ID does not exist!'
-                }
-            })
-        } else {
-            res.json('Post successfully deleted!')
-        }
+        await db.query('DELETE FROM post WHERE id = ($1)', [id])
+        res.json('post successfully deleted')
     }
 
     async getOnePost(req, res) {
         const id = req.params.id
         const post = await db.query('SELECT * FROM post WHERE id = ($1)', [id])
-        if (post.rowCount == 0) {
-            res.status(500).json({
-                error: {
-                    message: 'Error! Post with this ID does not exist!'
-                }
-            })
-        } else {
-            res.json(post.rows[0])
-        }
+        res.json(post.rows[0])
     }
 
     async getPosts(req, res) {
-        const posts = await db.query('SELECT * FROM post')
+        let posts
+        if (req.query?.threadId) {
+            posts = await db.query('SELECT * FROM post WHERE thread_id = ($1)', [req.query.threadId])
+        } else {
+            posts = await db.query('SELECT * FROM post')
+        }
         res.json(posts.rows)
     }
 }
