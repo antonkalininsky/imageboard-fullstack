@@ -1,6 +1,7 @@
 const db = require('../db')
 const moment = require('moment')
 
+// todo - убрать зависимости от res
 class ThreadController {
     async getThreads(req, res) {
         const result = await db.query('SELECT * FROM thread WHERE visible = ($1) ORDER BY updated_at DESC', [true])
