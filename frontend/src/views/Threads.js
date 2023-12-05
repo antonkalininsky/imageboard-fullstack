@@ -9,7 +9,7 @@ export default function Threads() {
   const [postList, setPostList] = useState([])
 
   const fetchData = async () => {
-    const res = await axios.get('/threads')
+    const res = await axios.get('/api/thread')
     setPosts(res.data)
   }
 

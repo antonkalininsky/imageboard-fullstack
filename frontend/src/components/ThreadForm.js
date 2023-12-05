@@ -11,7 +11,10 @@ export default function ThreadForm(props) {
     })
 
     const handleButtonClick = async () => {
-        await axios.post('/threads', { ...form })
+        await axios.post('/api/thread', {
+            title: form.header,
+            content: form.text
+        })
         setForm({
             header: '',
             text: ''

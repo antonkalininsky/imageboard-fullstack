@@ -5,7 +5,6 @@ class PostController {
     async updateThread(req, res) {
         const { threadId } = req.body
         const result = await db.query('SELECT COUNT(*) FROM post WHERE thread_id = ($1)', [threadId])
-        console.log(result.rows);
         const postCount = +result.rows[0].count
         const updatedAt = moment().format('YYYY-MM-DD hh:mm:ss')
         await db.query(`UPDATE thread SET post_count = ($1), updated_at = ($2) WHERE id = ($3)`, [postCount, updatedAt, threadId])
