@@ -52,10 +52,8 @@ class ThreadController {
     }
 
     async updateThreadCounts(req, res) {
-        // todo - доделать
         const id = req.params.id
         const result = await db.query('SELECT * FROM thread WHERE id = ($1)', [id])
-        console.log(result.rows[0]);
         const postCount = result.rows[0].post_count + 1
         const updatedAt = moment().format('YYYY-MM-DD hh:mm:ss')
         await db.query(`UPDATE thread SET post_count = ($1), updated_at = ($2) WHERE id = ($3)`, [postCount, updatedAt, id])
@@ -66,7 +64,6 @@ class ThreadController {
         const id = req.params.id
         await db.query(`UPDATE thread SET visible = ($1) WHERE id = ($2)`, [false, id])
         res.json('thread successfully hidden')
-    
     }
 }
 

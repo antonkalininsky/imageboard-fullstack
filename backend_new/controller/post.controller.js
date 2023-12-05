@@ -2,7 +2,16 @@ const db = require('../db')
 const moment = require('moment')
 
 class PostController {
-    async createPost(req, res) {
+    async updateThread(req, res) {
+        const { threadId } = req.body
+        const result = await db.query('SELECT COUNT(*) FROM post WHERE thread_id = ($1)', [threadId])
+        console.log(result.rows);
+        const postCount = +result.rows[0].count
+        const updatedAt = moment().format('YYYY-MM-DD hh:mm:ss')
+        await db.query(`UPDATE thread SET post_count = ($1), updated_at = ($2) WHERE id = ($3)`, [postCount, updatedAt, threadId])
+    }
+
+    async createPost(req, res, next) {
         // todo - update thread
         const { title, content, sage, threadId } = req.body
         // sending
@@ -14,6 +23,7 @@ class PostController {
                 'INSERT INTO post (title, content, sage, thread_id, created_at) values ($1, $2, $3, $4, $5) RETURNING *',
                 [titleCheck, content, sageCheck, threadId, createdAt]
             )
+        next()
         res.json(newPost.rows[0])
     }
 
@@ -36,10 +46,11 @@ class PostController {
         res.json('post successfully updated')
     }
 
-    async deletePost(req, res) {
+    async deletePost(req, res, next) {
         // todo - update thread
         const id = req.params.id
         await db.query('DELETE FROM post WHERE id = ($1)', [id])
+        next()
         res.json('post successfully deleted')
     }
 

@@ -19,7 +19,8 @@ router.post(
     '/post',
     postValidator.createValidator,
     validate,
-    postController.createPost
+    postController.createPost,
+    postController.updateThread
 )
 
 router.put(
@@ -32,7 +33,8 @@ router.put(
 router.delete('/post/:id',
     postValidator.postIdValidator,
     validate,
-    postController.deletePost
+    postController.deletePost,
+    postController.updateThread
 )
 
 module.exports = router
