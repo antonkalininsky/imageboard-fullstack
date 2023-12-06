@@ -7,43 +7,45 @@ import { useLocation } from 'react-router-dom'
 import MyButton from '../components/UI/MyButton'
 import { useNavigate } from 'react-router-dom'
 import { mdiArrowLeft } from '@mdi/js'
+import useDataSending from '../hooks/useDataSending'
+import useDataFetching from '../hooks/useDataFetching'
+import ThreadAxiosController from '../controllers/ThreadAxiosController'
+import PostAxiosController from '../controllers/PostAxiosController'
 
 export default function Thread() {
-
   const navigate = useNavigate()
 
-  const [originalPost, setOriginalPost] = useState({})
-  const [posts, setPosts] = useState([])
   const [postList, setPostList] = useState([])
+  const [currentId, setCurrentId] = useState(null)
+
+  const { data, loading, error, sendData } = useDataSending(PostAxiosController.createPost)
+  const { data: threadData, loading: threadLoading, error: threadError, fetchData: threadFetchData } = useDataFetching(ThreadAxiosController.getThreadById)
+  const { data: postData, loading: postLoading, error: postError, fetchData: postFetchData } = useDataFetching(PostAxiosController.getPostsByThreadId)
   let location = useLocation()
 
-  const fetchData = async () => {
-    const currentId = location.pathname.split('/').at(-1)
-    const resThread = await axios.get(`/api/thread/${currentId}`)
-    setOriginalPost(resThread.data)
-    const resPost = await axios.get(`/api/post?threadId=${currentId}`)
-    setPosts(resPost.data)
-  }
+  useEffect(() => {
+    setCurrentId(location.pathname.split('/').at(-1))
+    const test = location.pathname.split('/').at(-1)
+    threadFetchData(test)
+    postFetchData(test)
+  }, [])
 
   const handleRouting = () => {
     navigate(`/`)
   }
 
   useEffect(() => {
-    fetchData()
-  }, [])
-
-  useEffect(() => {
-    setPostList(posts.map(post => <Post text={post.content} key={post.id} />))
-  }, [JSON.stringify(posts)])
+    if (Array.isArray(postData)) {
+      setPostList(postData.map(post => <Post text={post.content} key={post.id} />))
+    }
+  }, [JSON.stringify(postData)])
 
   const submitPost = async (value) => {
-    const currentId = location.pathname.split('/').at(-1)
-    await axios.post('/api/post', {
+    await sendData({
       content: value,
       threadId: currentId
     })
-    await fetchData()
+    await postFetchData(currentId)
   }
 
   return (
@@ -56,14 +58,17 @@ export default function Thread() {
           icon={mdiArrowLeft}
         />
       </div>
-      <div className='w-1/2 text-white'>
-        <div className='text-2xl font-semibold mb-5'>
-          {originalPost.title}
+      {
+        !threadLoading &&
+        <div className='w-1/2 text-white'>
+          <div className='text-2xl font-semibold mb-5'>
+            {threadData?.title}
+          </div>
+          <div className='mb-5 text-lg font-medium'>
+            {threadData?.content}
+          </div>
         </div>
-        <div className='mb-5 text-lg font-medium'>
-          {originalPost.content}
-        </div>
-      </div>
+      }
       {/* <div className='w-1/2 h-1 bg-gray-darker mb-5'></div> */}
       <PostForm submit={submitPost} className='w-1/2 mb-10' />
       <div className='w-1/2'>
