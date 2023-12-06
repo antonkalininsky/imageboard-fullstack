@@ -53,6 +53,14 @@ class ThreadController {
         await db.query(`UPDATE thread SET visible = ($1) WHERE id = ($2)`, [false, id])
         // todo - нужна ли проверка на ошибку?
     }
+
+    
+    async updateThreadCounts(id) {
+        const result = await db.query('SELECT COUNT(*) FROM post WHERE thread_id = ($1)', [id])
+        const postCount = result.rows[0].count
+        const updatedAt = moment().format('YYYY-MM-DD hh:mm:ss')
+        await db.query(`UPDATE thread SET post_count = ($1), updated_at = ($2) WHERE id = ($3)`, [postCount, updatedAt, id])
+    }
 }
 
 module.exports = new ThreadController()

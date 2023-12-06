@@ -2,17 +2,8 @@ const db = require('../db')
 const moment = require('moment')
 
 class PostController {
-    async updateThread(req, res) {
-        const { threadId } = req.body
-        const result = await db.query('SELECT COUNT(*) FROM post WHERE thread_id = ($1)', [threadId])
-        const postCount = +result.rows[0].count
-        const updatedAt = moment().format('YYYY-MM-DD hh:mm:ss')
-        await db.query(`UPDATE thread SET post_count = ($1), updated_at = ($2) WHERE id = ($3)`, [postCount, updatedAt, threadId])
-    }
-
-    async createPost(req, res, next) {
-        // todo - update thread
-        const { title, content, sage, threadId } = req.body
+    async createPost(payload) {
+        const { title, content, sage, threadId } = payload
         // sending
         const titleCheck = title ? title : content.slice(0, 50)
         const sageCheck = sage ? true : false
@@ -22,51 +13,43 @@ class PostController {
                 'INSERT INTO post (title, content, sage, thread_id, created_at) values ($1, $2, $3, $4, $5) RETURNING *',
                 [titleCheck, content, sageCheck, threadId, createdAt]
             )
-        next()
-        res.json(newPost.rows[0])
+        return newPost.rows[0]
     }
 
-    async updatePost(req, res) {
+    async updatePost(id, payload) {
         const updatableFields = ['title', 'content']
-        const id = req.params.id
-        const postNewData = req.body
         let counter = 1
         let RequestSQL = ''
         const MapperSQL = []
         updatableFields.forEach((field) => {
-            if (postNewData?.[field]) {
+            if (postNewpayloadData?.[field]) {
                 if (RequestSQL.length !== 0) RequestSQL += ', '
                 RequestSQL += `${field} = ($${counter})`
-                MapperSQL.push(postNewData[field])
+                MapperSQL.push(payload[field])
                 counter++
             }
         })
         await db.query(`UPDATE post SET ${RequestSQL} WHERE id = ($${counter})`, [...MapperSQL, id])
-        res.json('post successfully updated')
     }
 
-    async deletePost(req, res, next) {
-        // todo - update thread
-        const id = req.params.id
+    async deletePost(id) {
         await db.query('DELETE FROM post WHERE id = ($1)', [id])
-        next()
-        res.json('post successfully deleted')
     }
 
-    async getOnePost(req, res) {
-        const id = req.params.id
+    async getOnePost(id) {
         const post = await db.query('SELECT * FROM post WHERE id = ($1)', [id])
-        res.json(post.rows[0])
+        return post.rows[0]
     }
 
-    async getPosts(req, res) {
+    async getPosts(id) {
+        // todo - исправить эндпоинт, не понятно что тут мы по тредам получаем посты
         let posts
-        if (req.query?.threadId) {
-            posts = await db.query('SELECT * FROM post WHERE thread_id = ($1)', [req.query.threadId])
+        if (id) {
+            posts = await db.query('SELECT * FROM post WHERE thread_id = ($1)', [id])
         } else {
             posts = await db.query('SELECT * FROM post')
         }
-        res.json(posts.rows)
+        return posts.rows
     }
 }
 
