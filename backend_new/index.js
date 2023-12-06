@@ -3,9 +3,9 @@ require('dotenv').config()
 const express = require('express')
 const postRouter = require('./routes/post.routes')
 const threadRouter = require('./routes/thread.routes')
-const ThreadHidinService = require('./services/ThreadHidingService')
+const ThreadHidingService = require('./services/ThreadHidingService')
 
-const threadHidingService = new ThreadHidinService()
+const threadHidingService = new ThreadHidingService()
 
 const app = express()
 const port = 5000

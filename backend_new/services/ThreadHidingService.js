@@ -1,6 +1,6 @@
 const threadController = require('../controller/thread.controller')
 
-module.exports = class ThreadHidinService {
+module.exports = class ThreadHidingService {
     constructor() {
         // minutes
         this.checkCycleLength = 5
