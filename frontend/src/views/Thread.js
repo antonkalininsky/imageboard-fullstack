@@ -19,9 +19,9 @@ export default function Thread() {
 
   const fetchData = async () => {
     const currentId = location.pathname.split('/').at(-1)
-    const resThread = await axios.get(`/threads?id=${currentId}`)
+    const resThread = await axios.get(`/api/thread/${currentId}`)
     setOriginalPost(resThread.data)
-    const resPost = await axios.get(`/posts?threadId=${currentId}`)
+    const resPost = await axios.get(`/api/post?threadId=${currentId}`)
     setPosts(resPost.data)
   }
 
@@ -34,13 +34,13 @@ export default function Thread() {
   }, [])
 
   useEffect(() => {
-    setPostList(posts.map(post => <Post text={post.text} key={post.id} />))
+    setPostList(posts.map(post => <Post text={post.content} key={post.id} />))
   }, [JSON.stringify(posts)])
 
   const submitPost = async (value) => {
     const currentId = location.pathname.split('/').at(-1)
-    await axios.post('/posts', {
-      text: value,
+    await axios.post('/api/post', {
+      content: value,
       threadId: currentId
     })
     await fetchData()
@@ -58,10 +58,10 @@ export default function Thread() {
       </div>
       <div className='w-1/2 text-white'>
         <div className='text-2xl font-semibold mb-5'>
-          {originalPost.header}
+          {originalPost.title}
         </div>
         <div className='mb-5 text-lg font-medium'>
-          {originalPost.text}
+          {originalPost.content}
         </div>
       </div>
       {/* <div className='w-1/2 h-1 bg-gray-darker mb-5'></div> */}
