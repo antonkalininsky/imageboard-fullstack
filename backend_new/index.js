@@ -3,6 +3,9 @@ require('dotenv').config()
 const express = require('express')
 const postRouter = require('./routes/post.routes')
 const threadRouter = require('./routes/thread.routes')
+const ThreadHidinService = require('./services/ThreadHidingService')
+
+const threadHidingService = new ThreadHidinService()
 
 const app = express()
 const port = 5000
@@ -13,5 +16,7 @@ app.use('/api', threadRouter)
 
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`Server listening on port ${port}`)
 })
+
+threadHidingService.run()
