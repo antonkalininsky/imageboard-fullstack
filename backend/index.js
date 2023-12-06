@@ -1,24 +1,22 @@
-const PORT = process.env.PORT || 5000
+require('dotenv').config()
 
-const ThreadService = require('./src/threadService')
-const Application = require('./framework/application')
-const postRouter = require('./src/post-router')
-const threadRouter = require('./src/thread-router')
-const parseUrl = require('./framework/middlewares/parseUrl')
-const parseJson = require('./framework/middlewares/parseJson')
+const express = require('express')
+const postRouter = require('./routes/post.routes')
+const threadRouter = require('./routes/thread.routes')
+const ThreadHidingService = require('./services/ThreadHidingService')
 
-const app = new Application()
-const threadService = new ThreadService()
+const threadHidingService = new ThreadHidingService()
 
-app.use(parseJson)
-app.use(parseUrl('http://localhost:5000'))
+const app = express()
+const port = 5000
 
-app.addRouter(postRouter)
-app.addRouter(threadRouter)
+app.use(express.json())
+app.use('/api', postRouter)
+app.use('/api', threadRouter)
 
-try {
-    app.listen(PORT, () => console.log(`server started on PORT ${PORT}`))
-    threadService.checkThreads()
-} catch(error) {
-    console.log(error)
-}
+
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`)
+})
+
+threadHidingService.run()
