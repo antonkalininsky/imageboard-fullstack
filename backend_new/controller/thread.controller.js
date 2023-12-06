@@ -3,19 +3,18 @@ const moment = require('moment')
 
 // todo - убрать зависимости от res
 class ThreadController {
-    async getThreads(req, res) {
+    async getThreads() {
         const result = await db.query('SELECT * FROM thread WHERE visible = ($1) ORDER BY updated_at DESC', [true])
-        res.json(result.rows)
+        return result.rows
     }
 
-    async getOneThread(req, res) {
-        const id = req.params.id
+    async getOneThread(id) {
         const result = await db.query('SELECT * FROM thread WHERE id = ($1)', [id])
-        res.json(result.rows[0])
+        return result.rows[0]
     }
 
-    async createThread(req, res) {
-        const { title, content } = req.body
+    async createThread(payload) {
+        const { title, content } = payload
         // todo - пишется странное время, чей часовой пояс?
         const titleCheck = title ? title : content.slice(0, 50)
         const createdAt = moment().format('YYYY-MM-DD hh:mm:ss')
@@ -24,13 +23,12 @@ class ThreadController {
                 'INSERT INTO thread (title, content, created_at, updated_at, post_count, visible) values ($1, $2, $3, $4, $5, $6) RETURNING *',
                 [titleCheck, content, createdAt, createdAt, 0, true]
             )
-        res.json(newThread.rows[0])
+        return newThread.rows[0]
     }
 
-    async updateThread(req, res) {
+    async updateThread(id, payload) {
         const updatableFields = ['title', 'content', 'visible']
-        const id = req.params.id
-        const postNewData = req.body
+        const postNewData = payload
         let counter = 1
         let RequestSQL = ''
         const MapperSQL = []
@@ -43,28 +41,17 @@ class ThreadController {
             }
         })
         await db.query(`UPDATE thread SET ${RequestSQL} WHERE id = ($${counter})`, [...MapperSQL, id])
-        res.json('thread successfully updated')
+        // todo - нужна ли проверка на ошибку?
     }
 
-    async deleteThread(req, res) {
-        const id = req.params.id
+    async deleteThread(id) {
         await db.query('DELETE FROM thread WHERE id = ($1)', [id])
-        res.json('thread successfully deleted')
+        // todo - нужна ли проверка на ошибку?
     }
 
-    async updateThreadCounts(req, res) {
-        const id = req.params.id
-        const result = await db.query('SELECT * FROM thread WHERE id = ($1)', [id])
-        const postCount = result.rows[0].post_count + 1
-        const updatedAt = moment().format('YYYY-MM-DD hh:mm:ss')
-        await db.query(`UPDATE thread SET post_count = ($1), updated_at = ($2) WHERE id = ($3)`, [postCount, updatedAt, id])
-        res.json('Thread successfully updated!')
-    }
-
-    async hideThread(req, res) {
-        const id = req.params.id
+    async hideThread(id) {
         await db.query(`UPDATE thread SET visible = ($1) WHERE id = ($2)`, [false, id])
-        res.json('thread successfully hidden')
+        // todo - нужна ли проверка на ошибку?
     }
 }
 
