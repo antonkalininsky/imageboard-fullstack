@@ -18,7 +18,7 @@ export default function Thread() {
   const [postList, setPostList] = useState([])
   const [currentId, setCurrentId] = useState(null)
 
-  const { data, loading, error, sendData } = useDataSending(PostAxiosController.createPost)
+  const { data: createData, loading: createLoading, error: createError, sendData: createPost } = useDataSending(PostAxiosController.createPost)
   const { data: threadData, loading: threadLoading, error: threadError, fetchData: threadFetchData } = useDataFetching(ThreadAxiosController.getThreadById)
   const { data: postData, loading: postLoading, error: postError, fetchData: postFetchData } = useDataFetching(PostAxiosController.getPostsByThreadId)
   let location = useLocation()
@@ -41,7 +41,7 @@ export default function Thread() {
   }, [JSON.stringify(postData)])
 
   const submitPost = async (value) => {
-    await sendData({
+    await createPost({
       content: value,
       threadId: currentId
     })

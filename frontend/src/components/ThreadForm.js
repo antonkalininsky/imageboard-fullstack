@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import MyInput from './UI/MyInput'
 import MyTextArea from './UI/MyTextArea'
 import PinkButton from './UI/PinkButton'
-import axios from 'axios'
 import ThreadAxiosController from '../controllers/ThreadAxiosController'
 import useDataSending from '../hooks/useDataSending'
 
