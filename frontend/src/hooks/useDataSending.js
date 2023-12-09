@@ -15,7 +15,6 @@ const useDataSending = (sendFoo) => {
                 throw new Error(`Error: ${response.status} - ${response.statusText}`);
             }
             setData(response.data)
-            console.log(data);
         } catch (error) {
             setError(error)
         } finally {

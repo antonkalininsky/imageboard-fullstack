@@ -1,6 +1,5 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Post from '../components/Post'
 import PostForm from '../components/PostForm'
 import { useLocation } from 'react-router-dom'
@@ -11,6 +10,7 @@ import useDataSending from '../hooks/useDataSending'
 import useDataFetching from '../hooks/useDataFetching'
 import ThreadAxiosController from '../controllers/ThreadAxiosController'
 import PostAxiosController from '../controllers/PostAxiosController'
+import moment from 'moment'
 
 export default function Thread() {
   const navigate = useNavigate()
@@ -18,17 +18,21 @@ export default function Thread() {
   const [postList, setPostList] = useState([])
   const [currentId, setCurrentId] = useState(null)
 
-  const { data: createData, loading: createLoading, error: createError, sendData: createPost } = useDataSending(PostAxiosController.createPost)
-  const { data: threadData, loading: threadLoading, error: threadError, fetchData: threadFetchData } = useDataFetching(ThreadAxiosController.getThreadById)
-  const { data: postData, loading: postLoading, error: postError, fetchData: postFetchData } = useDataFetching(PostAxiosController.getPostsByThreadId)
+  const { sendData: createPost } = useDataSending(PostAxiosController.createPost)
+  const { data: threadData, loading: threadLoading, fetchData: threadFetchData } = useDataFetching(ThreadAxiosController.getThreadById)
+  const { data: postData, fetchData: postFetchData } = useDataFetching(PostAxiosController.getPostsByThreadId)
   let location = useLocation()
 
   useEffect(() => {
     setCurrentId(location.pathname.split('/').at(-1))
-    const test = location.pathname.split('/').at(-1)
-    threadFetchData(test)
-    postFetchData(test)
-  }, [])
+  }, [location.pathname])
+
+  useEffect(() => {
+    if (currentId !== null) {
+      threadFetchData(currentId)
+      postFetchData(currentId)
+    }
+  }, [currentId])
 
   const handleRouting = () => {
     navigate(`/`)
@@ -36,13 +40,13 @@ export default function Thread() {
 
   useEffect(() => {
     if (Array.isArray(postData)) {
-      setPostList(postData.map(post => <Post text={post.content} key={post.id} />))
+      setPostList(postData.map(post => <Post {...post} key={post.id} />))
     }
   }, [JSON.stringify(postData)])
 
   const submitPost = async (value) => {
     await createPost({
-      content: value,
+      ...value,
       threadId: currentId
     })
     await postFetchData(currentId)
@@ -61,8 +65,13 @@ export default function Thread() {
       {
         !threadLoading &&
         <div className='w-1/2 text-white'>
-          <div className='text-2xl font-semibold mb-5'>
-            {threadData?.title}
+          <div className='mb-5 flex justify-between'>
+            <div className='text-2xl font-semibold'>
+              {threadData?.title}
+            </div>
+            <div>
+              {moment(threadData?.created_at).format('hh:mm:ss DD.MM.YYYY')}
+            </div>
           </div>
           <div className='mb-5 text-lg font-medium'>
             {threadData?.content}
@@ -70,7 +79,10 @@ export default function Thread() {
         </div>
       }
       {/* <div className='w-1/2 h-1 bg-gray-darker mb-5'></div> */}
-      <PostForm submit={submitPost} className='w-1/2 mb-10' />
+      <PostForm submit={submitPost} className='w-1/2 mb-5' />
+      <div className='text-white font-bold bg-gray-darker rounded-lg p-4 mb-5'>
+        Responses: <span className='text-pink'>{threadData?.post_count}</span>
+      </div>
       <div className='w-1/2'>
         {postList}
       </div>

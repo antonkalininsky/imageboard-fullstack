@@ -7,7 +7,7 @@ import useDataSending from '../hooks/useDataSending'
 
 
 export default function ThreadForm(props) {
-    const { data, loading, error, sendData } = useDataSending(ThreadAxiosController.createThread)
+    const { sendData } = useDataSending(ThreadAxiosController.createThread)
 
     const [form, setForm] = useState({
         title: '',

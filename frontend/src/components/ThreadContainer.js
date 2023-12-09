@@ -2,6 +2,7 @@ import React from 'react'
 import MyButton from './UI/MyButton'
 import { mdiChat, mdiBookmark } from '@mdi/js';
 import { useNavigate } from 'react-router-dom'
+import moment from 'moment/moment';
 
 export default function ThreadContainer(props) {
 
@@ -24,9 +25,12 @@ export default function ThreadContainer(props) {
       <div className='mb-5 text-lg font-medium'>
         {props.content}
       </div>
-      <div className='flex space-x-2'>
+      <div className='flex justify-between items-center'>
         {/* <MyButton icon={mdiBookmark} counter={false} onClick={handleAddFavourite} /> */}
         <MyButton text={'Answer'} icon={mdiChat} counter={props.post_count} onClick={handleEnterThread} />
+        <div>
+          {moment(props.created_at).format('hh:mm:ss DD.MM.YYYY')}
+        </div>
       </div>
     </div>
   )
