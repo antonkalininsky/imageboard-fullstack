@@ -1,12 +1,21 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import moment from 'moment/moment'
+import TextStylizer from '../services/TextStylizer'
 
 export default function Post(props) {
+
+  const [text, setText] = useState('')
+
+  useEffect(() => {
+    const stylizedText = TextStylizer.stylize(props.content)
+    setText(stylizedText)
+  }, [props.content])
+
   return (
     <>
       <div className='text-white w-full mb-5'>
         <div className='flex justify-between'>
-          <div className='break-words'>{props.title}</div>
+          <div className='break-words text-light'>{props.title}</div>
           <div className='flex'>
             {
               props.sage && <div className='text-pink mr-2'>sage</div>
@@ -19,7 +28,7 @@ export default function Post(props) {
             </div>
           </div>
         </div>
-        <div className='break-words'>{props.content}</div>
+        <div className='break-words'>{text}</div>
       </div>
       <div className='w-full h-1 bg-gray-darker mb-5'></div>
     </>
