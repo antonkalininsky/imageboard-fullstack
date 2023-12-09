@@ -28,7 +28,7 @@ router.post(
     validate,
     async (req, res) => {
         const result = await postController.createPost(req.body)
-        await threadController.updateThreadCounts(req.body.threadId)
+        await threadController.updateThreadCounts(req.body.threadId, req.body.sage)
         res.json(result)
     }
 )
