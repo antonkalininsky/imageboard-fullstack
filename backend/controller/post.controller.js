@@ -5,7 +5,7 @@ class PostController {
     async createPost(payload) {
         const { title, content, sage, threadId } = payload
         // sending
-        const titleCheck = title ? title : content.slice(0, 50)
+        const titleCheck = title ? title : 'Anon'
         const sageCheck = sage ? true : false
         const createdAt = moment().format('YYYY-MM-DD hh:mm:ss')
         const newPost =
