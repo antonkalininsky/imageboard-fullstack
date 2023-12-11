@@ -81,7 +81,7 @@ export default function Thread() {
       {/* <div className='w-1/2 h-1 bg-gray-darker mb-5'></div> */}
       <PostForm submit={submitPost} className='w-1/2 mb-5' />
       <div className='text-white font-bold bg-gray-darker rounded-lg p-4 mb-5'>
-        Responses: <span className='text-pink'>{threadData?.post_count}</span>
+        Responses: <span className='text-pink'>{postData?.length}</span>
       </div>
       <div className='w-1/2'>
         {postList}
