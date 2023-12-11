@@ -1,9 +1,36 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import moment from 'moment/moment'
+import TextStylizer from '../services/TextStylizer'
 
 export default function Post(props) {
+
+  const [text, setText] = useState('')
+
+  useEffect(() => {
+    const stylizedText = TextStylizer.stylizeLine(props.content)
+    // const stylizedText = TextStylizer.stylize(props.content)
+    setText(stylizedText)
+  }, [props.content])
+
   return (
     <>
-      <div className='text-white w-full mb-5 break-words'>{props.text}</div>
+      <div className='text-white w-full mb-5'>
+        <div className='flex justify-between mb-2'>
+          <div className='break-words text-light'>{props.title}</div>
+          <div className='flex'>
+            {
+              props.sage && <div className='text-pink mr-2'>sage</div>
+            }
+            <div className='mr-2 hover:underline cursor-pointer'>
+              &gt;&gt;{props.id}
+            </div>
+            <div>
+              {moment(props.created_at).format('hh:mm:ss DD.MM.YYYY')}
+            </div>
+          </div>
+        </div>
+        <div className='whitespace-pre-wrap'>{text}</div>
+      </div>
       <div className='w-full h-1 bg-gray-darker mb-5'></div>
     </>
   )

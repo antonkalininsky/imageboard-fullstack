@@ -2,22 +2,23 @@ import React, { useState } from 'react'
 import MyInput from './UI/MyInput'
 import MyTextArea from './UI/MyTextArea'
 import PinkButton from './UI/PinkButton'
-import axios from 'axios'
+import ThreadAxiosController from '../controllers/ThreadAxiosController'
+import useDataSending from '../hooks/useDataSending'
+
 
 export default function ThreadForm(props) {
+    const { sendData } = useDataSending(ThreadAxiosController.createThread)
+
     const [form, setForm] = useState({
-        header: '',
-        text: ''
+        title: '',
+        content: ''
     })
 
     const handleButtonClick = async () => {
-        await axios.post('/api/thread', {
-            title: form.header,
-            content: form.text
-        })
+        await sendData({...form})
         setForm({
-            header: '',
-            text: ''
+            title: '',
+            content: ''
         })
         props.triggerUpdate()
     }
@@ -25,21 +26,21 @@ export default function ThreadForm(props) {
     const handleHeaderChange = (e) => {
         setForm({
             ...form,
-            header: e.target.value
+            title: e.target.value
         })
     }
 
     const handleTextChange = (e) => {
         setForm({
             ...form,
-            text: e.target.value
+            content: e.target.value
         })
     }
 
     return (
         <div className='flex flex-col justify-start items-center w-1/4'>
-            <MyInput className="w-full mb-2 mt-5" value={form.header} onChange={handleHeaderChange} />
-            <MyTextArea className="w-full mb-2" value={form.text} onChange={handleTextChange} />
+            <MyInput className="w-full mb-2 mt-5" value={form.title} onChange={handleHeaderChange} />
+            <MyTextArea className="w-full mb-2" value={form.content} onChange={handleTextChange} />
             <PinkButton className="w-3/4 mb-8" onClick={handleButtonClick}>Add Thread</PinkButton>
         </div>
     )

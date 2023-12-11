@@ -3,6 +3,7 @@ const db = require('../db')
 const threadIdCheck = require('./misc/threadIdCheck')
 
 createValidator = [
+    body('content').isLength({ max: 255 }).withMessage('max content length is 255'),
     body('content').notEmpty().withMessage('content is required'),
     body('threadId').notEmpty().withMessage('threadId is required'),
     body('threadId').custom(threadIdCheck)

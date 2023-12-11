@@ -1,30 +1,28 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import ThreadForm from '../components/ThreadForm'
-import ThreadContainer from '../components/UI/ThreadContainer'
+import ThreadContainer from '../components/ThreadContainer'
+import useDataFetching from '../hooks/useDataFetching'
+import ThreadAxiosController from '../controllers/ThreadAxiosController'
+import Loader from '../components/UI/Loader'
 
 export default function Threads() {
-
-  const [posts, setPosts] = useState([])
+  const { data, loading, error, fetchData } = useDataFetching(ThreadAxiosController.getThreads)
   const [postList, setPostList] = useState([])
 
-  const fetchData = async () => {
-    const res = await axios.get('/api/thread')
-    setPosts(res.data)
-  }
+  useEffect(() => fetchData, [])
 
   useEffect(() => {
-    fetchData()
-  }, [])
-
-  useEffect(() => {
-    setPostList(posts.map(post => <ThreadContainer {...post} key={post.id} />))
-  }, [JSON.stringify(posts)])
+    if (Array.isArray(data)) {
+      setPostList(data.map(post => <ThreadContainer {...post} key={post.id} />))
+    }
+  }, [JSON.stringify(data)])
 
   return (
     <div className='flex flex-col justify-start items-center pt-10'>
       <ThreadForm triggerUpdate={fetchData} />
-      {postList}
+      {loading && <Loader/>}
+      {error && error}
+      {data && postList}
     </div>
   );
 }

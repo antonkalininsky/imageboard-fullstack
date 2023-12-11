@@ -13,7 +13,8 @@ module.exports = {
       'primary': '#d1caff',
       'pink': '#fc728b',
       'light': '#d1caff',
-      'light-darker': '#a7a1cc'
+      'light-darker': '#a7a1cc',
+      'green': '#6a9955',
     },
     extend: {
       boxShadow: {
