@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import PinkButton from './UI/PinkButton'
 import Checkbox from './UI/Checkbox'
 import MyInput from './UI/MyInput'
+import MyButton from './UI/MyButton'
 
 export default function PostForm(props) {
     const [form, setForm] = useState({
@@ -28,10 +29,11 @@ export default function PostForm(props) {
                 className={'mb-3'}
             />
             <textarea
+                id="post-form-input"
                 rows="6"
                 className='block resize-none bg-gray-dark border-pink border-2 text-white focus:outline-none mb-3 p-2 rounded-lg'
                 value={form.content}
-                onChange={(e) => setForm({...form, content: e.target.value})}
+                onChange={(e) => setForm({ ...form, content: e.target.value })}
             />
             <div className='flex justify-between'>
                 <div>
