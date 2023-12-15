@@ -14,6 +14,12 @@ class ThreadAxiosController {
         return axios.get(`/api/thread/${id}`)
     }
 
+    getFavThreadsData(payload) {
+        return axios.post('/api/selected-threads', {
+            ids: payload
+        })
+    }
+
 }
 
 export default new ThreadAxiosController()

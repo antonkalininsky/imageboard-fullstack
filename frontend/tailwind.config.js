@@ -12,6 +12,7 @@ module.exports = {
       'blackish': '#12151d',
       'primary': '#d1caff',
       'pink': '#fc728b',
+      'pink-mid': '#c95a6e',
       'light': '#d1caff',
       'light-darker': '#a7a1cc',
       'green': '#6a9955',

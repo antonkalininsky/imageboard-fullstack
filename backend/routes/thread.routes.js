@@ -65,4 +65,14 @@ router.post(
     }
 )
 
+router.post(
+    '/selected-threads/',
+    threadValidator.selectedThreadsValidator,
+    validate,
+    async (req, res) => {
+        const result = await threadController.getSelectedThreads(req.body.ids)
+        res.json(result)
+    }
+)
+
 module.exports = router

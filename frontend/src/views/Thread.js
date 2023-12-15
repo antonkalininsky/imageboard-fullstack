@@ -11,6 +11,8 @@ import useDataFetching from '../hooks/useDataFetching'
 import ThreadAxiosController from '../controllers/ThreadAxiosController'
 import PostAxiosController from '../controllers/PostAxiosController'
 import moment from 'moment'
+import FavThreadButton from '../components/FavThreadButton'
+import FavThreadListService from '../services/FavThreadListService'
 
 export default function Thread() {
   const navigate = useNavigate()
@@ -25,6 +27,7 @@ export default function Thread() {
 
   useEffect(() => {
     setCurrentId(location.pathname.split('/').at(-1))
+    FavThreadListService.readFavThreadListFromLocalStorage()
   }, [location.pathname])
 
   useEffect(() => {
@@ -54,13 +57,14 @@ export default function Thread() {
 
   return (
     <div className='flex flex-col justify-start items-center pt-10'>
-      <div className='w-1/2 mb-10'>
+      <div className='w-1/2 mb-10 flex'>
         <MyButton
           text={'Back'}
           onClick={handleRouting}
-          className='self-start'
+          className='self-start mr-2'
           icon={mdiArrowLeft}
         />
+        <FavThreadButton id={+currentId} />
       </div>
       {
         !threadLoading &&
