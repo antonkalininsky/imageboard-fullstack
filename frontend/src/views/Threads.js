@@ -4,7 +4,6 @@ import ThreadContainer from '../components/ThreadContainer'
 import useDataFetching from '../hooks/useDataFetching'
 import ThreadAxiosController from '../controllers/ThreadAxiosController'
 import Loader from '../components/UI/Loader'
-import FavThreadListService from '../services/FavThreadListService'
 import FavBox from '../components/FavBox/FavBox'
 
 export default function Threads() {
@@ -12,7 +11,6 @@ export default function Threads() {
   const [postList, setPostList] = useState([])
 
   useEffect(() => {
-    FavThreadListService.readFavThreadListFromLocalStorage()
     fetchData()
   }, [])
 

@@ -1,21 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import MyButton from '../UI/MyButton'
 import { mdiCancel, mdiChat } from '@mdi/js'
 import { useNavigate } from 'react-router-dom'
-import useFavThreadHook from '../../hooks/useFavThreadHook'
+import FavThreadsContext from '../../context/FavThreadsContext'
 
 export default function FavBoxItem(props) {
-    const favThreads = useFavThreadHook()
+    const favThreads = useContext(FavThreadsContext)
 
     const navigate = useNavigate()
-
-    const handleDeleteFromFav = () => {
-        favThreads.toggleItem(props.id)
-    }
-
-    const handleEnterThread = () => {
-        navigate(`/thread/${props.id}`)
-    }
 
     return (
         <div className='flex align-top justify-between gap-x-2 mb-5 mt-3'>
@@ -26,14 +18,14 @@ export default function FavBoxItem(props) {
                 <MyButton
                     text={'Answers'}
                     icon={mdiChat}
-                    onClick={handleEnterThread}
+                    onClick={() => navigate(`/thread/${props.id}`)}
                     counter={props.post_count}
                     className="mr-2"
                 />
                 <MyButton
                     className={'bg-pink hover:bg-pink-mid'}
                     icon={mdiCancel}
-                    onClick={handleDeleteFromFav}
+                    onClick={() => favThreads.toggleItem(props.id)}
                 />
             </div>
         </div>

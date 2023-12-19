@@ -1,26 +1,23 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { mdiBookmark } from '@mdi/js'
-import FavThreadListService from '../services/FavThreadListService'
 import MyButton from './UI/MyButton'
+import FavThreadsContext from '../context/FavThreadsContext'
 
 export default function FavThreadButton(props) {
-    const [isFav, setIsFav] = useState(false)
+  const favThreads = useContext(FavThreadsContext)
 
-    const handleAddFavourite = () => {
-        FavThreadListService.toggleFavThreadListItem(props.id)
-        setIsFav(FavThreadListService.checkFavThreadListItemById(props.id))
-      }
-    
-      useEffect(() => {
-        setIsFav(FavThreadListService.checkFavThreadListItemById(props.id))
-      }, [props.id])
+  const [isFav, setIsFav] = useState(false)
 
-    return (
-        <MyButton
-            icon={mdiBookmark}
-            counter={false}
-            onClick={handleAddFavourite}
-            className={`mr-2 ${isFav && "bg-primary hover:bg-light-darker"}`}
-        />
-    )
+  useEffect(() => {
+    setIsFav(favThreads.checkId(props.id))
+  }, [props.id, [...favThreads.favThreads]])
+
+  return (
+    <MyButton
+      icon={mdiBookmark}
+      counter={false}
+      onClick={() => favThreads.toggleItem(props.id)}
+      className={`mr-2 ${isFav && "bg-primary hover:bg-light-darker"}`}
+    />
+  )
 }

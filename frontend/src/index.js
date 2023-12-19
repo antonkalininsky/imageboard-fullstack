@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom'
 import Thread from './views/Thread';
 import Threads from './views/Threads';
+import FavThreadsProvider from './context/FavThreadsProvider';
 import './index.css'
 
 const router = createBrowserRouter([
@@ -22,6 +23,8 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <FavThreadsProvider>
+      <RouterProvider router={router} />
+    </FavThreadsProvider>
   </React.StrictMode>
 );
