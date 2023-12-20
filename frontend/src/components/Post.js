@@ -8,7 +8,6 @@ export default function Post(props) {
 
   useEffect(() => {
     const stylizedText = TextStylizer.stylizeLine(props.content)
-    // const stylizedText = TextStylizer.stylize(props.content)
     setText(stylizedText)
   }, [props.content])
 
@@ -18,6 +17,9 @@ export default function Post(props) {
         <div className='flex justify-between mb-2'>
           <div className='break-words text-light'>{props.title}</div>
           <div className='flex'>
+            {
+              props.isOp && <div className='mr-2'>OP</div>
+            }
             {
               props.sage && <div className='text-pink mr-2'>sage</div>
             }

@@ -2,22 +2,20 @@ import React, { useState, useEffect } from 'react'
 import PinkButton from './UI/PinkButton'
 import Checkbox from './UI/Checkbox'
 import MyInput from './UI/MyInput'
-import MyButton from './UI/MyButton'
+
+const defaultForm = {
+    title: '',
+    content: '',
+    sage: false,
+    isOp: false
+}
 
 export default function PostForm(props) {
-    const [form, setForm] = useState({
-        title: '',
-        content: '',
-        sage: false
-    })
+    const [form, setForm] = useState({...defaultForm})
 
     const handleSubmitPost = () => {
         props.submit(form)
-        setForm({
-            title: '',
-            content: '',
-            sage: false
-        })
+        setForm({...defaultForm})
     }
 
     return (
@@ -38,7 +36,7 @@ export default function PostForm(props) {
             <div className='flex justify-between'>
                 <div>
                     <Checkbox updateValue={(value) => setForm({ ...form, sage: value })}>Sage</Checkbox>
-                    {/* <Checkbox updateValue={handleOpChange}>OP</Checkbox> */}
+                    <Checkbox updateValue={(value) => setForm({ ...form, isOp: value})}>OP</Checkbox>
                 </div>
                 <PinkButton className="w-min" onClick={handleSubmitPost}>Send</PinkButton>
             </div>

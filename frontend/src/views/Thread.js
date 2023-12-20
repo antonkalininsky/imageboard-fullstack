@@ -12,6 +12,7 @@ import ThreadAxiosController from '../controllers/ThreadAxiosController'
 import PostAxiosController from '../controllers/PostAxiosController'
 import moment from 'moment'
 import FavThreadButton from '../components/FavThreadButton'
+import UserIdentificator from '../services/UserIdentificator'
 
 export default function Thread() {
     const navigate = useNavigate()
@@ -48,7 +49,8 @@ export default function Thread() {
     const submitPost = async (value) => {
         await createPost({
             ...value,
-            threadId: currentId
+            threadId: currentId,
+            userId: UserIdentificator.getUserId()
         })
         await postFetchData(currentId)
     }

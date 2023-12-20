@@ -4,7 +4,7 @@ import MyTextArea from './UI/MyTextArea'
 import PinkButton from './UI/PinkButton'
 import ThreadAxiosController from '../controllers/ThreadAxiosController'
 import useDataSending from '../hooks/useDataSending'
-
+import UserIdentificator from '../services/UserIdentificator'
 
 export default function ThreadForm(props) {
     const { sendData } = useDataSending(ThreadAxiosController.createThread)
@@ -15,7 +15,7 @@ export default function ThreadForm(props) {
     })
 
     const handleButtonClick = async () => {
-        await sendData({...form})
+        await sendData({...form, userId: UserIdentificator.getUserId()})
         setForm({
             title: '',
             content: ''
