@@ -10,7 +10,7 @@ export default function FavBoxItem(props) {
     const navigate = useNavigate()
 
     return (
-        <div className='flex align-top justify-between gap-x-2 mb-5 mt-3'>
+        <div className='flex align-top justify-between gap-x-2 mt-5'>
             <div className='text-lg text-white font-semibold line-clamp-2'>
                 {props.title}
             </div>

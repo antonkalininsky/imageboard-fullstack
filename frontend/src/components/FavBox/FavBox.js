@@ -19,7 +19,7 @@ export default function FavBox() {
             setFavThreadsList([])
             return
         }
-        fetchData(favThreads.favThreads)
+        fetchData(favThreads.favThreads) 
     }, [favThreads.favThreads, triggerUpdate])
 
     useEffect(() => {
@@ -31,8 +31,8 @@ export default function FavBox() {
     }, [data])
 
     return (
-        <div className='fixed w-1/3 max-h-1/3 bg-gray left-0 top-0 rounded-lg border-2 border-primary p-5 overflow-y-scroll overflow-x-hidden'>
-            <div className={`flex items-center justify-between align-top ${isOpen && 'mb-6'}`}>
+        <div className='fixed w-1/3 max-h-1/3 bg-gray left-0 top-0 rounded-lg border-2 border-primary p-5 overflow-y-hidden overflow-x-hidden'>
+            <div className={'flex items-center justify-between align-top'}>
                 <div className='text-white text-2xl text-center font-semibold'>
                     Favourites ({favThreadsList.length})
                 </div>
