@@ -5,7 +5,7 @@ import Icon from '@mdi/react'
 export default function MyButton(props) {
     return (
         <button
-            className={'bg-gray-light text-gray-darker rounded-2xl p-2 font-semibold text-sm flex items-center hover:bg-gray-mid h-min' + props.className}
+            className={'bg-gray-light text-gray-darker rounded-2xl p-2 font-semibold text-sm flex items-center hover:bg-gray-mid h-min ' + props.className}
             onClick={props.onClick}
         >
             {

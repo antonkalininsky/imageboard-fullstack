@@ -5,4 +5,5 @@ module.exports = async (value) => {
     if (check.rows[0].count == 0) {
         throw new Error('thread with this id does not exist')
     }
+    return true
 }

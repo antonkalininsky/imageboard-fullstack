@@ -54,7 +54,7 @@ class ThreadController {
         // todo - нужна ли проверка на ошибку?
     }
 
-    
+
     async updateThreadCounts(id, saged = false) {
         const result = await db.query('SELECT COUNT(*) FROM post WHERE thread_id = ($1)', [id])
         const postCount = result.rows[0].count
@@ -64,6 +64,12 @@ class ThreadController {
             const updatedAt = moment().format('YYYY-MM-DD hh:mm:ss')
             await db.query(`UPDATE thread SET post_count = ($1), updated_at = ($2) WHERE id = ($3)`, [postCount, updatedAt, id])
         }
+    }
+
+    async getSelectedThreads(ids) {
+        const stringOfIds = ids.join(', ')
+        const result = await db.query(`SELECT id, title, post_count FROM thread WHERE visible = true AND id IN (${stringOfIds}) ORDER BY updated_at DESC`)
+        return result.rows
     }
 }
 
