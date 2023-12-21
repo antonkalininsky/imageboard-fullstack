@@ -74,7 +74,7 @@ export default function Thread() {
                             {threadData?.title}
                         </div>
                         <div>
-                            {moment(threadData?.created_at).format('hh:mm:ss DD.MM.YYYY')}
+                            {moment(threadData?.createdAt).format('hh:mm:ss DD.MM.YYYY')}
                         </div>
                     </div>
                     <div className='mb-5 text-lg font-medium'>

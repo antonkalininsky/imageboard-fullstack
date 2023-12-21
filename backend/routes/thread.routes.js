@@ -54,6 +54,14 @@ router.delete(
     }
 )
 
+router.delete(
+    '/thread',
+    async (req, res) => {
+        await threadController.deletaAllThreads()
+        res.json('all threads successfully deleted')
+    }
+)
+
 router.post(
     '/hide-thread/:id',
     threadValidator.threadIdValidator,

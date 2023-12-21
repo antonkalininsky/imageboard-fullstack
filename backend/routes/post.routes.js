@@ -27,14 +27,15 @@ router.post(
     postValidator.createValidator,
     validate,
     async (req, res) => {
-        const result = await postController.createPost(req.body)
+        const isOp = await threadController.checkOriginalPoster(req.body.threadId, req.body.userId)
+        const result = await postController.createPost(req.body, isOp)
         await threadController.updateThreadCounts(req.body.threadId, req.body.sage)
         res.json(result)
     }
 )
 
 router.put(
-    '/post/:id', 
+    '/post/:id',
     postValidator.postIdValidator,
     validate,
     async (req, res) => {
@@ -51,6 +52,13 @@ router.delete('/post/:id',
         await postController.deletePost(req.params.id)
         await threadController.updateThreadCounts(result.thread_id)
         res.json('post successfully deleted')
+    }
+)
+
+router.delete('/post',
+    async (req, res) => {
+        await postController.deleteAllPosts()
+        res.json('all posts successfully deleted')
     }
 )
 

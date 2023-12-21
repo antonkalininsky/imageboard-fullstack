@@ -18,7 +18,7 @@ export default function Post(props) {
           <div className='break-words text-light'>{props.title}</div>
           <div className='flex'>
             {
-              props.isOp && <div className='mr-2'>OP</div>
+              props.isOp && <div className='text-green mr-2'>OP</div>
             }
             {
               props.sage && <div className='text-pink mr-2'>sage</div>
@@ -27,7 +27,7 @@ export default function Post(props) {
               &gt;&gt;{props.id}
             </div>
             <div>
-              {moment(props.created_at).format('hh:mm:ss DD.MM.YYYY')}
+              {moment(props.createdAt).format('hh:mm:ss DD.MM.YYYY')}
             </div>
           </div>
         </div>

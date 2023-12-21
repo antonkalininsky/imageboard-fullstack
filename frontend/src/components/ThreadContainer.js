@@ -28,12 +28,12 @@ export default function ThreadContainer(props) {
           <MyButton
             text={'Answer'}
             icon={mdiChat}
-            counter={props.post_count}
+            counter={props.postCount}
             onClick={handleEnterThread}
           />
         </div>
         <div>
-          {moment(props.created_at).format('hh:mm:ss DD.MM.YYYY')}
+          {moment(props.createdAt).format('hh:mm:ss DD.MM.YYYY')}
         </div>
       </div>
     </div>
