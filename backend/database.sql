@@ -6,7 +6,7 @@ create TABLE thread(
     updated_at TIMESTAMP,
     post_count INTEGER,
     visible BOOLEAN,
-    bumplimit BOOLEAN
+    user_id VARCHAR(36)
 );
 
 create TABLE post(
@@ -16,5 +16,7 @@ create TABLE post(
     sage BOOLEAN,
     created_at TIMESTAMP,
     thread_id INTEGER,
+    user_id VARCHAR(36),
+    original_poster BOOLEAN,
     FOREIGN KEY (thread_id) REFERENCES thread (id)
 );
