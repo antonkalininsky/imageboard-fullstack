@@ -23,7 +23,7 @@ export default function PostForm(props) {
         setForm({ ...defaultForm })
     }
 
-    const handleTest = (styler) => () => {
+    const handleStylingButton = (styler) => () => {
         if (selected.start === selected.end) return
         const part1 = form.content.slice(0, selected.start)
         const part2 = form.content.slice(selected.start, selected.end)
@@ -34,11 +34,41 @@ export default function PostForm(props) {
         })
     }
 
-    const handleMouseUp = () => {
-        const txtarea = document.getElementById("post-form-input")
+    const handleHeaderQuoteButton = (styler) => () => {
+        const targetIndex = selected.start
+        const text = form.content
+        let prevBreakIndex = -1
+        let breakIndex = 0
+        let safeCount = 0
+        while (true) {
+            safeCount++
+            breakIndex = text.indexOf('\n', prevBreakIndex + 1)
+            if (breakIndex >= targetIndex || breakIndex === -1) {
+                break
+            } else {
+                prevBreakIndex = breakIndex
+            }
+            if (safeCount > text.length) break
+        }
+        if (prevBreakIndex === -1) {
+            setForm({
+                ...form,
+                content: styler + ' ' + text
+            })
+        } else {
+            const part1 = text.slice(0, prevBreakIndex + 1)
+            const part2 = text.slice(prevBreakIndex + 1)
+            setForm({
+                ...form,
+                content: part1 + styler + ' ' + part2
+            })
+        }
+    }
+
+    const handleTextAreaMouseMovement = (e) => {
         setSelected({
-            start: txtarea.selectionStart,
-            end: txtarea.selectionEnd
+            start: e.target.selectionStart,
+            end: e.target.selectionEnd
         })
     }
 
@@ -56,7 +86,9 @@ export default function PostForm(props) {
                 className='block resize-none bg-gray-dark border-pink border-2 text-white focus:outline-none mb-3 p-2 rounded-lg'
                 value={form.content}
                 onChange={(e) => setForm({ ...form, content: e.target.value })}
-                onMouseUp={handleMouseUp}
+                onMouseUp={handleTextAreaMouseMovement}
+                onMouseEnter={handleTextAreaMouseMovement}
+                onMouseLeave={handleTextAreaMouseMovement}
             />
             <div className='flex justify-between'>
                 <div>
@@ -64,8 +96,10 @@ export default function PostForm(props) {
                     <Checkbox updateValue={(value) => setForm({ ...form, isOp: value })}>OP</Checkbox>
                 </div>
                 <div className='flex'>
-                    <MyButton className='mr-1' text={'bold'} onClick={handleTest('*')} />
-                    <MyButton text={'italic'} onClick={handleTest('**')} />
+                    <MyButton className='mr-1' text={'bold'} onClick={handleStylingButton('*')} />
+                    <MyButton className='mr-1' text={'italic'} onClick={handleStylingButton('**')} />
+                    <MyButton className='mr-1' text={'header'} onClick={handleHeaderQuoteButton('#')} />
+                    <MyButton text={'quote'} onClick={handleHeaderQuoteButton('>')} />
                 </div>
                 <PinkButton className="w-min" onClick={handleSubmitPost}>Send</PinkButton>
             </div>
