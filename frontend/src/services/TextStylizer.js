@@ -69,6 +69,48 @@ class TextStylizer {
     })
     return result
   }
+
+  addingInlineStyling(text, character, coordinates) {
+    if (coordinates.start === coordinates.end) return text
+    const part1 = text.slice(0, coordinates.start)
+    const part2 = text.slice(coordinates.start, coordinates.end)
+    const part3 = text.slice(coordinates.end)
+    return part1 + character + part2 + character + part3
+  }
+
+  addingLineStyling(text, character, coordinates) {
+    const targetIndex = coordinates.start
+    let prevBreakIndex = -1
+    let breakIndex = 0
+    let safeCount = 0
+    while (true) {
+        safeCount++
+        breakIndex = text.indexOf('\n', prevBreakIndex + 1)
+        if (breakIndex >= targetIndex || breakIndex === -1) {
+            break
+        } else {
+            prevBreakIndex = breakIndex
+        }
+        if (safeCount > text.length) break
+    }
+    if (prevBreakIndex === -1) {
+      return character + ' ' + text
+    } 
+    const part1 = text.slice(0, prevBreakIndex + 1)
+    const part2 = text.slice(prevBreakIndex + 1)
+    return part1 + character + ' ' + part2
+  }
+
+  addingStylingCharacters(text, character, coordinates) {
+    if (character === '*' || character === '**') {
+      return this.addingInlineStyling(text, character, coordinates)
+    } else if (character === '>' || character === '#') {
+      return this.addingLineStyling(text, character, coordinates)
+    } else {
+      return text
+    }
+
+  }
 }
 
-export default new TextStylizer
+export default new TextStylizer()

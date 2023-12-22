@@ -4,8 +4,16 @@ import { mdiChat } from '@mdi/js';
 import { useNavigate } from 'react-router-dom'
 import moment from 'moment/moment';
 import FavThreadButton from './FavThreadButton';
+import TextStylizer from '../services/TextStylizer';
 
 export default function ThreadContainer(props) {
+
+  const [text, setText] = useState()
+
+  useEffect(() => {
+    const stylizedText = TextStylizer.stylizeLine(props.content)
+    setText(stylizedText)
+  }, [props.content])
 
   const navigate = useNavigate()
 
@@ -20,7 +28,7 @@ export default function ThreadContainer(props) {
             <div>file1</div>
         </div> */}
       <div className='mb-5 text-lg font-medium'>
-        {props.content}
+        {text}
       </div>
       <div className='flex justify-between items-center'>
         <div className='flex'>
