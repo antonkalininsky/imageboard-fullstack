@@ -36,10 +36,6 @@ export default function Thread() {
         }
     }, [currentId])
 
-    const handleRouting = () => {
-        navigate(`/`)
-    }
-
     useEffect(() => {
         if (Array.isArray(postData)) {
             setPostList(postData.map(post => <Post {...post} key={post.id} />))
@@ -60,7 +56,7 @@ export default function Thread() {
             <div className='w-1/2 mb-10 flex'>
                 <MyButton
                     text={'Back'}
-                    onClick={handleRouting}
+                    onClick={() => navigate(`/`)}
                     className='self-start mr-2'
                     icon={mdiArrowLeft}
                 />
