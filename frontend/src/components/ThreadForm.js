@@ -62,7 +62,7 @@ export default function ThreadForm(props) {
                 <MyButton className='mr-1' text={'header'} onClick={handleStylingButton('#')} />
                 <MyButton text={'quote'} onClick={handleStylingButton('>')} />
             </div>
-            <PinkButton className="w-3/4 mb-8" onClick={handleButtonClick}>Add Thread</PinkButton>
+            <PinkButton className="w-3/4" onClick={handleButtonClick}>Add Thread</PinkButton>
         </div>
     )
 }

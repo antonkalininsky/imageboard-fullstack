@@ -24,6 +24,9 @@ export default function Threads() {
     <div className='flex flex-col justify-start items-center pt-10'>
       <FavBox />
       <ThreadForm triggerUpdate={fetchData} />
+      <div className='text-white font-bold bg-gray-darker rounded-lg p-4 my-5'>
+        Threads: <span className='text-pink'>{postList?.length}</span>
+      </div>
       {loading && <Loader />}
       {error && error}
       {data && postList}
