@@ -5,6 +5,7 @@ import useDataFetching from '../hooks/useDataFetching'
 import ThreadAxiosController from '../controllers/ThreadAxiosController'
 import Loader from '../components/UI/Loader'
 import FavBox from '../components/FavBox/FavBox'
+import ErrorMsg from '../components/UI/ErrorMsg'
 
 export default function Threads() {
   const { data, loading, error, fetchData } = useDataFetching(ThreadAxiosController.getThreads)
@@ -27,9 +28,13 @@ export default function Threads() {
       <div className='text-white font-bold bg-gray-darker rounded-lg p-4 my-5'>
         Threads: <span className='text-pink'>{postList?.length}</span>
       </div>
-      {loading && <Loader />}
-      {error && error}
-      {data && postList}
+      {
+        loading
+          ? <Loader />
+          : error
+            ? <ErrorMsg />
+            : postList
+      }
     </div>
   );
 }

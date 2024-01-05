@@ -13,6 +13,8 @@ import PostAxiosController from '../controllers/PostAxiosController'
 import moment from 'moment'
 import FavThreadButton from '../components/FavThreadButton'
 import UserIdentificator from '../services/UserIdentificator'
+import Loader from '../components/UI/Loader'
+import ErrorMsg from '../components/UI/ErrorMsg'
 
 export default function Thread() {
     const navigate = useNavigate()
@@ -21,8 +23,8 @@ export default function Thread() {
     const [currentId, setCurrentId] = useState(null)
 
     const { sendData: createPost } = useDataSending(PostAxiosController.createPost)
-    const { data: threadData, loading: threadLoading, fetchData: threadFetchData } = useDataFetching(ThreadAxiosController.getThreadById)
-    const { data: postData, fetchData: postFetchData } = useDataFetching(PostAxiosController.getPostsByThreadId)
+    const { data: threadData, loading: threadLoading, error: threadError, fetchData: threadFetchData } = useDataFetching(ThreadAxiosController.getThreadById)
+    const { data: postData, loading: postsLoading, error: postsError, fetchData: postFetchData } = useDataFetching(PostAxiosController.getPostsByThreadId)
     let location = useLocation()
 
     useEffect(() => {
@@ -52,40 +54,54 @@ export default function Thread() {
     }
 
     return (
-        <div className='flex flex-col justify-start items-center pt-10'>
-            <div className='w-1/2 mb-10 flex'>
-                <MyButton
-                    text={'Back'}
-                    onClick={() => navigate(`/`)}
-                    className='self-start mr-2'
-                    icon={mdiArrowLeft}
-                />
-                <FavThreadButton id={+currentId} />
+        <>
+            <div className='flex flex-col justify-start items-center pt-10'>
+                {(postsError || threadError) && <ErrorMsg />}
             </div>
-            {
-                !threadLoading &&
-                <div className='w-1/2 text-white'>
-                    <div className='mb-5 flex justify-between'>
-                        <div className='text-2xl font-semibold'>
-                            {threadData?.title}
-                        </div>
-                        <div>
-                            {moment(threadData?.createdAt).format('hh:mm:ss DD.MM.YYYY')}
-                        </div>
+            {!postsError && !threadError &&
+                <div className='flex flex-col justify-start items-center'>
+                    {
+                        threadLoading
+                            ? <Loader />
+                            :
+                            <div className='w-1/2'>
+                                <div className='mb-10 flex'>
+                                    <MyButton
+                                        text={'Back'}
+                                        onClick={() => navigate(`/`)}
+                                        className='self-start mr-2'
+                                        icon={mdiArrowLeft}
+                                    />
+                                    <FavThreadButton id={+currentId} />
+                                </div>
+                                <div className='text-white'>
+                                    <div className='mb-5 flex justify-between'>
+                                        <div className='text-2xl font-semibold'>
+                                            {threadData?.title}
+                                        </div>
+                                        <div>
+                                            {moment(threadData?.createdAt).format('hh:mm:ss DD.MM.YYYY')}
+                                        </div>
+                                    </div>
+                                    <div className='mb-5 text-lg font-medium'>
+                                        {threadData?.content}
+                                    </div>
+                                </div>
+                                <PostForm submit={submitPost} className='my-5' />
+                            </div>
+                    }
+                    <div className='text-white font-bold bg-gray-darker rounded-lg p-4 mb-5'>
+                        Responses: <span className='text-pink'>{postData?.length}</span>
                     </div>
-                    <div className='mb-5 text-lg font-medium'>
-                        {threadData?.content}
+                    <div className='w-1/2 flex flex-col justify-start items-center'>
+                        {
+                            postsLoading
+                                ? <Loader />
+                                : postList
+                        }
                     </div>
                 </div>
             }
-            {/* <div className='w-1/2 h-1 bg-gray-darker mb-5'></div> */}
-            <PostForm submit={submitPost} className='w-1/2 mb-5' />
-            <div className='text-white font-bold bg-gray-darker rounded-lg p-4 mb-5'>
-                Responses: <span className='text-pink'>{postData?.length}</span>
-            </div>
-            <div className='w-1/2'>
-                {postList}
-            </div>
-        </div>
+        </>
     );
 }
