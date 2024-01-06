@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import MyInput from './UI/MyInput'
 import MyTextArea from './UI/MyTextArea'
 import PinkButton from './UI/PinkButton'
@@ -7,10 +7,12 @@ import useDataSending from '../hooks/useDataSending'
 import UserIdentificator from '../services/UserIdentificator'
 import MyButton from './UI/MyButton'
 import TextStylizer from '../services/TextStylizer'
+import { useNavigate } from 'react-router-dom'
 
 export default function ThreadForm(props) {
     // hooks
-    const { sendData, loading } = useDataSending(ThreadAxiosController.createThread)
+    const navigate = useNavigate()
+    const { sendData, loading, data, error } = useDataSending(ThreadAxiosController.createThread)
     const [form, setForm] = useState({
         title: '',
         content: ''
@@ -19,6 +21,13 @@ export default function ThreadForm(props) {
         start: 0,
         end: 0
     })
+
+    useEffect(() => {
+        if (data?.id) {
+            navigate(`/thread/${data.id}`)
+        }
+
+    }, [data?.id])
 
     // foos
     const handleButtonClick = async () => {
