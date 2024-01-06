@@ -1,12 +1,12 @@
 import React from 'react'
 
-export default function PinkButton(props) {
+export default function PinkButton({ className, children, ...props }) {
   return (
     <button
-        className={'bg-light text-gray-dark p-6 rounded-lg text-center font-semibold hover:bg-light-darker ' + props.className}
-        onClick={props.onClick}
+      className={'bg-light disabled:bg-light-darker text-gray-dark p-6 rounded-lg text-center font-semibold hover:bg-light-darker ' + className}
+      {...props}
     >
-        {props.children}
+      {children}
     </button>
   )
 }

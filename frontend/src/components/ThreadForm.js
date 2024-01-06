@@ -10,7 +10,7 @@ import TextStylizer from '../services/TextStylizer'
 
 export default function ThreadForm(props) {
     // hooks
-    const { sendData } = useDataSending(ThreadAxiosController.createThread)
+    const { sendData, loading } = useDataSending(ThreadAxiosController.createThread)
     const [form, setForm] = useState({
         title: '',
         content: ''
@@ -22,7 +22,7 @@ export default function ThreadForm(props) {
 
     // foos
     const handleButtonClick = async () => {
-        await sendData({...form, userId: UserIdentificator.getUserId()})
+        await sendData({ ...form, userId: UserIdentificator.getUserId() })
         setForm({
             title: '',
             content: ''
@@ -47,11 +47,11 @@ export default function ThreadForm(props) {
 
     return (
         <div className='flex flex-col justify-start items-center w-1/4'>
-            <MyInput className="w-full mb-2 mt-5" value={form.title} onChange={(e) => setForm({...form, title: e.target.value})} />
+            <MyInput className="w-full mb-2 mt-5" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
             <MyTextArea
                 className={"w-full mb-2"}
                 value={form.content}
-                onChange={(e) => setForm({...form, content: e.target.value})}
+                onChange={(e) => setForm({ ...form, content: e.target.value })}
                 onMouseUp={handleTextAreaMouseMovement}
                 onMouseEnter={handleTextAreaMouseMovement}
                 onMouseLeave={handleTextAreaMouseMovement}
@@ -62,7 +62,7 @@ export default function ThreadForm(props) {
                 <MyButton className='mr-1' text={'header'} onClick={handleStylingButton('#')} />
                 <MyButton text={'quote'} onClick={handleStylingButton('>')} />
             </div>
-            <PinkButton className="w-3/4" onClick={handleButtonClick}>Add Thread</PinkButton>
+            <PinkButton className="w-3/4" onClick={handleButtonClick} disabled={loading}>Add Thread</PinkButton>
         </div>
     )
 }

@@ -41,7 +41,7 @@ export default function ThreadContainer(props) {
           />
         </div>
         <div>
-          {moment(props.createdAt).format('hh:mm:ss DD.MM.YYYY')}
+          {moment(props.createdAt).format('HH:mm:ss DD.MM.YYYY')}
         </div>
       </div>
     </div>

@@ -5,6 +5,8 @@ import ThreadAxiosController from '../../controllers/ThreadAxiosController'
 import FavThreadsContext from '../../context/FavThreadsContext'
 import MyButton from '../UI/MyButton'
 import { mdiRefresh, mdiArrowUp, mdiArrowDown } from '@mdi/js'
+import Loader from '../UI/Loader'
+import ErrorMsg from '../UI/ErrorMsg'
 
 export default function FavBox() {
     const favThreads = useContext(FavThreadsContext)
@@ -41,6 +43,7 @@ export default function FavBox() {
                     <MyButton
                         icon={mdiRefresh}
                         onClick={() => setTriggerUpdate(!triggerUpdate)}
+                        disabled={loading}
                         className={'mr-2'}
                     />
                     <MyButton
@@ -50,7 +53,12 @@ export default function FavBox() {
                 </div>
             </div>
             <div>
-                {isOpen && favThreadsList}
+                {isOpen && (loading
+                    ? <Loader />
+                    : error
+                        ? <ErrorMsg />
+                        : favThreadsList)
+                }
             </div>
         </div>
     )

@@ -6,13 +6,11 @@ import { useLocation } from 'react-router-dom'
 import MyButton from '../components/UI/MyButton'
 import { useNavigate } from 'react-router-dom'
 import { mdiArrowLeft } from '@mdi/js'
-import useDataSending from '../hooks/useDataSending'
 import useDataFetching from '../hooks/useDataFetching'
 import ThreadAxiosController from '../controllers/ThreadAxiosController'
 import PostAxiosController from '../controllers/PostAxiosController'
 import moment from 'moment'
 import FavThreadButton from '../components/FavThreadButton'
-import UserIdentificator from '../services/UserIdentificator'
 import Loader from '../components/UI/Loader'
 import ErrorMsg from '../components/UI/ErrorMsg'
 
@@ -22,7 +20,6 @@ export default function Thread() {
     const [postList, setPostList] = useState([])
     const [currentId, setCurrentId] = useState(null)
 
-    const { sendData: createPost } = useDataSending(PostAxiosController.createPost)
     const { data: threadData, loading: threadLoading, error: threadError, fetchData: threadFetchData } = useDataFetching(ThreadAxiosController.getThreadById)
     const { data: postData, loading: postsLoading, error: postsError, fetchData: postFetchData } = useDataFetching(PostAxiosController.getPostsByThreadId)
     let location = useLocation()
@@ -43,15 +40,6 @@ export default function Thread() {
             setPostList(postData.map(post => <Post {...post} key={post.id} />))
         }
     }, [JSON.stringify(postData)])
-
-    const submitPost = async (value) => {
-        await createPost({
-            ...value,
-            threadId: currentId,
-            userId: UserIdentificator.getUserId()
-        })
-        await postFetchData(currentId)
-    }
 
     return (
         <>
@@ -80,14 +68,14 @@ export default function Thread() {
                                             {threadData?.title}
                                         </div>
                                         <div>
-                                            {moment(threadData?.createdAt).format('hh:mm:ss DD.MM.YYYY')}
+                                            {moment(threadData?.createdAt).format('HH:mm:ss DD.MM.YYYY')}
                                         </div>
                                     </div>
                                     <div className='mb-5 text-lg font-medium'>
                                         {threadData?.content}
                                     </div>
                                 </div>
-                                <PostForm submit={submitPost} className='my-5' />
+                                <PostForm threadId={currentId} updatePosts={() => postFetchData(currentId)} className='my-5' />
                             </div>
                     }
                     <div className='text-white font-bold bg-gray-darker rounded-lg p-4 mb-5'>

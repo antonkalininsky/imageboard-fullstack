@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const useDataSending = (sendFoo) => {
     const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
     const sendData = async (options) => {

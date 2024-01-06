@@ -4,6 +4,9 @@ import Checkbox from './UI/Checkbox'
 import MyInput from './UI/MyInput'
 import MyButton from './UI/MyButton'
 import TextStylizer from '../services/TextStylizer'
+import useDataSending from '../hooks/useDataSending'
+import PostAxiosController from '../controllers/PostAxiosController'
+import UserIdentificator from '../services/UserIdentificator'
 
 const defaultForm = {
     title: '',
@@ -13,14 +16,23 @@ const defaultForm = {
 }
 
 export default function PostForm(props) {
+    
+    const { sendData, loading } = useDataSending(PostAxiosController.createPost)
+
     const [form, setForm] = useState({ ...defaultForm })
+
     const [selected, setSelected] = useState({
         start: 0,
         end: 0
     })
 
-    const handleSubmitPost = () => {
-        props.submit(form)
+    const handleSubmitPost = async () => {
+        await sendData({
+            ...form,
+            threadId: props.threadId,
+            userId: UserIdentificator.getUserId()
+        })
+        props.updatePosts()
         setForm({ ...defaultForm })
     }
 
@@ -67,7 +79,7 @@ export default function PostForm(props) {
                     <MyButton className='mr-1' text={'header'} onClick={handleStylingButton('#')} />
                     <MyButton text={'quote'} onClick={handleStylingButton('>')} />
                 </div>
-                <PinkButton className="w-min" onClick={handleSubmitPost}>Send</PinkButton>
+                <PinkButton className="w-min" onClick={handleSubmitPost} disabled={loading}>Send</PinkButton>
             </div>
         </div>
     )
