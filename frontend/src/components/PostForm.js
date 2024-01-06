@@ -33,7 +33,11 @@ export default function PostForm(props) {
             userId: UserIdentificator.getUserId()
         })
         props.updatePosts()
-        setForm({ ...defaultForm })
+        setForm({
+            ...defaultForm,
+            sage: form.sage,
+            isOp: form.isOp
+        })
     }
 
     const handleStylingButton = (styler) => () => {
@@ -49,6 +53,10 @@ export default function PostForm(props) {
             start: e.target.selectionStart,
             end: e.target.selectionEnd
         })
+    }
+
+    const handleChange = (e) => {
+        console.log(e.target.checked)
     }
 
     return (
@@ -70,8 +78,8 @@ export default function PostForm(props) {
             />
             <div className='flex justify-between'>
                 <div>
-                    <Checkbox updateValue={(value) => setForm({ ...form, sage: value })}>Sage</Checkbox>
-                    <Checkbox updateValue={(value) => setForm({ ...form, isOp: value })}>OP</Checkbox>
+                    <Checkbox checked={form.sage} onChange={(e) => setForm({...form, sage: e.target.checked})}>Sage</Checkbox>
+                    <Checkbox checked={form.isOp} onChange={(e) => setForm({...form, isOp: e.target.checked})}>OP</Checkbox>
                 </div>
                 <div className='flex'>
                     <MyButton className='mr-1' text={'italic'} onClick={handleStylingButton('*')} />
