@@ -8,7 +8,6 @@ export default function Post(props) {
 
   useEffect(() => {
     const stylizedText = TextStylizer.stylizeLine(props.content)
-    // const stylizedText = TextStylizer.stylize(props.content)
     setText(stylizedText)
   }, [props.content])
 
@@ -19,13 +18,16 @@ export default function Post(props) {
           <div className='break-words text-light'>{props.title}</div>
           <div className='flex'>
             {
+              props.isOp && <div className='text-green mr-2'>OP</div>
+            }
+            {
               props.sage && <div className='text-pink mr-2'>sage</div>
             }
             <div className='mr-2 hover:underline cursor-pointer'>
               &gt;&gt;{props.id}
             </div>
             <div>
-              {moment(props.created_at).format('hh:mm:ss DD.MM.YYYY')}
+              {moment(props.createdAt).format('HH:mm:ss DD.MM.YYYY')}
             </div>
           </div>
         </div>

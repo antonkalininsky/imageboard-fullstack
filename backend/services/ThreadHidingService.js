@@ -20,7 +20,7 @@ module.exports = class ThreadHidingService {
         const dateTimeNow = Date.now()
         const threads = await threadController.getThreads()
         for (let i = 0; i < threads.length; i++) {
-            const threadCreatedTime = new Date(threads[i].created_at)
+            const threadCreatedTime = new Date(threads[i].createdAt)
             if (dateTimeNow - threadCreatedTime.getTime() > this.lifetimeLength * 60 * 1000) {
                 await threadController.hideThread(threads[i].id)
             }

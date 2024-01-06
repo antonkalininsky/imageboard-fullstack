@@ -4,26 +4,49 @@ const moment = require('moment')
 // todo - убрать зависимости от res
 class ThreadController {
     async getThreads() {
-        const result = await db.query('SELECT * FROM thread WHERE visible = ($1) ORDER BY updated_at DESC', [true])
-        return result.rows
+        const result = await db.query('SELECT * FROM thread WHERE visible = true ORDER BY updated_at DESC')
+        return result.rows.map((thread) => {
+            return {
+                id: thread.id,
+                title: thread.title,
+                content: thread.content,
+                createdAt: thread.created_at,
+                updatedAt: thread.updated_at,
+                postCount: thread.post_count
+            }
+        })
     }
 
     async getOneThread(id) {
         const result = await db.query('SELECT * FROM thread WHERE id = ($1)', [id])
-        return result.rows[0]
+        return {
+            id: result.rows[0].id,
+            title: result.rows[0].title,
+            content: result.rows[0].content,
+            createdAt: result.rows[0].created_at,
+            updatedAt: result.rows[0].updated_at,
+            postCount: result.rows[0].post_count
+        }
     }
 
     async createThread(payload) {
-        const { title, content } = payload
+        const { title, content, userId } = payload
         // todo - пишется странное время, чей часовой пояс?
         const titleCheck = title ? title : content.slice(0, 50)
         const createdAt = moment().format('YYYY-MM-DD hh:mm:ss')
         const newThread =
             await db.query(
-                'INSERT INTO thread (title, content, created_at, updated_at, post_count, visible) values ($1, $2, $3, $4, $5, $6) RETURNING *',
-                [titleCheck, content, createdAt, createdAt, 0, true]
+                'INSERT INTO thread (title, content, created_at, updated_at, post_count, visible, user_id) values ($1, $2, $3, $4, 0, true, $5) RETURNING *',
+                [titleCheck, content, createdAt, createdAt, userId]
             )
-        return newThread.rows[0]
+        return {
+            id: newThread.rows[0].id,
+            title: newThread.rows[0].title,
+            content: newThread.rows[0].content,
+            createdAt: newThread.rows[0].created_at,
+            updatedAt: newThread.rows[0].updated_at,
+            postCount: newThread.rows[0].post_count
+        }
     }
 
     async updateThread(id, payload) {
@@ -49,6 +72,10 @@ class ThreadController {
         // todo - нужна ли проверка на ошибку?
     }
 
+    async deletaAllThreads() {
+        await db.query('DELETE FROM thread')
+    }
+
     async hideThread(id) {
         await db.query(`UPDATE thread SET visible = ($1) WHERE id = ($2)`, [false, id])
         // todo - нужна ли проверка на ошибку?
@@ -69,7 +96,18 @@ class ThreadController {
     async getSelectedThreads(ids) {
         const stringOfIds = ids.join(', ')
         const result = await db.query(`SELECT id, title, post_count FROM thread WHERE visible = true AND id IN (${stringOfIds}) ORDER BY updated_at DESC`)
-        return result.rows
+        return result.rows.map((thread) => {
+            return {
+                id: thread.id,
+                title: thread.title,
+                postCount: thread.post_count
+            }
+        })
+    }
+
+    async checkOriginalPoster(threadId, userId) {
+        const result = await db.query('SELECT * FROM thread WHERE id = ($1) AND user_id = ($2)', [threadId, userId])
+        return result.rows.length !== 0
     }
 }
 

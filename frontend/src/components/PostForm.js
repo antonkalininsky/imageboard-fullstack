@@ -1,23 +1,62 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import PinkButton from './UI/PinkButton'
 import Checkbox from './UI/Checkbox'
 import MyInput from './UI/MyInput'
 import MyButton from './UI/MyButton'
+import TextStylizer from '../services/TextStylizer'
+import useDataSending from '../hooks/useDataSending'
+import PostAxiosController from '../controllers/PostAxiosController'
+import UserIdentificator from '../services/UserIdentificator'
+
+const defaultForm = {
+    title: '',
+    content: '',
+    sage: false,
+    isOp: false
+}
 
 export default function PostForm(props) {
-    const [form, setForm] = useState({
-        title: '',
-        content: '',
-        sage: false
+    
+    const { sendData, loading } = useDataSending(PostAxiosController.createPost)
+
+    const [form, setForm] = useState({ ...defaultForm })
+
+    const [selected, setSelected] = useState({
+        start: 0,
+        end: 0
     })
 
-    const handleSubmitPost = () => {
-        props.submit(form)
-        setForm({
-            title: '',
-            content: '',
-            sage: false
+    const handleSubmitPost = async () => {
+        await sendData({
+            ...form,
+            threadId: props.threadId,
+            userId: UserIdentificator.getUserId()
         })
+        props.updatePosts()
+        setForm({
+            ...defaultForm,
+            sage: form.sage,
+            isOp: form.isOp
+        })
+    }
+
+    const handleStylingButton = (styler) => () => {
+        const result = TextStylizer.addingStylingCharacters(form.content, styler, selected)
+        setForm({
+            ...form,
+            content: result
+        })
+    }
+
+    const handleTextAreaMouseMovement = (e) => {
+        setSelected({
+            start: e.target.selectionStart,
+            end: e.target.selectionEnd
+        })
+    }
+
+    const handleChange = (e) => {
+        console.log(e.target.checked)
     }
 
     return (
@@ -29,18 +68,26 @@ export default function PostForm(props) {
                 className={'mb-3'}
             />
             <textarea
-                id="post-form-input"
                 rows="6"
                 className='block resize-none bg-gray-dark border-pink border-2 text-white focus:outline-none mb-3 p-2 rounded-lg'
                 value={form.content}
                 onChange={(e) => setForm({ ...form, content: e.target.value })}
+                onMouseUp={handleTextAreaMouseMovement}
+                onMouseEnter={handleTextAreaMouseMovement}
+                onMouseLeave={handleTextAreaMouseMovement}
             />
             <div className='flex justify-between'>
                 <div>
-                    <Checkbox updateValue={(value) => setForm({ ...form, sage: value })}>Sage</Checkbox>
-                    {/* <Checkbox updateValue={handleOpChange}>OP</Checkbox> */}
+                    <Checkbox checked={form.sage} onChange={(e) => setForm({...form, sage: e.target.checked})}>Sage</Checkbox>
+                    <Checkbox checked={form.isOp} onChange={(e) => setForm({...form, isOp: e.target.checked})}>OP</Checkbox>
                 </div>
-                <PinkButton className="w-min" onClick={handleSubmitPost}>Send</PinkButton>
+                <div className='flex'>
+                    <MyButton className='mr-1' text={'italic'} onClick={handleStylingButton('*')} />
+                    <MyButton className='mr-1' text={'bold'} onClick={handleStylingButton('**')} />
+                    <MyButton className='mr-1' text={'header'} onClick={handleStylingButton('#')} />
+                    <MyButton text={'quote'} onClick={handleStylingButton('>')} />
+                </div>
+                <PinkButton className="w-min" onClick={handleSubmitPost} disabled={loading}>Send</PinkButton>
             </div>
         </div>
     )

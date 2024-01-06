@@ -19,7 +19,7 @@ export default function FavBoxItem(props) {
                     text={'Answers'}
                     icon={mdiChat}
                     onClick={() => navigate(`/thread/${props.id}`)}
-                    counter={props.post_count}
+                    counter={props.postCount}
                     className="mr-2"
                 />
                 <MyButton

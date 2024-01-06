@@ -1,7 +1,8 @@
 import React from 'react'
+import './Loader.css'
 
 export default function Loader() {
   return (
-    <div className='text-white'>Loading...</div>
+    <div className="loader"></div>
   )
 }
